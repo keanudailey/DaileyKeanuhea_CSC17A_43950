@@ -17,22 +17,37 @@ void outAray(int [],int);
 void sortAray(int [],int);
 float mean(int [],int);
 float median(int [],int);
-void mode(int [],int [],int);
+int *mode(int [],int [],int);
 
 int main(int argc, char** argv) {
     srand(time(0));
-    int aRay[] = {0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3};
+    int const size = rand()%50;
+    int aRay[size];
+    int count = 0;
+    while(count < size){
+        int i = 0;
+        while(i < 10 && count < size){
+            aRay[count] = i;
+            ++count;
+            ++i;
+        }
+    }
     int bRay[10];
     for(int i = 0; i < 10; ++i){
         bRay[i] = 0;
     }
-    outAray(aRay,24);
-    sortAray(aRay,24);
-    outAray(aRay,24);
-    cout << "Mean: " << mean(aRay,24) << endl;
-    cout << "Median: " << median(aRay,24) << endl;
-    outAray(bRay,10);
-    mode(aRay,bRay,24);
+    outAray(aRay,size);
+    sortAray(aRay,size);
+    outAray(aRay,size);
+    cout << "Mean: " << mean(aRay,size) << endl;
+    cout << "Median: " << median(aRay,size) << endl;
+    int *c = mode(aRay, bRay,size);
+    cout << "# of Modes: " << c[0] << endl;
+    cout << "Max Frequency: " << c[1] << endl;
+    for(int i = 0; i < c[0]; ++i){
+        cout << c[i+2] << " ";
+    }
+    delete(c);
     return 0;
 }
 void outAray(int a[], int size){
@@ -71,34 +86,32 @@ float median(int a[],int size){
         return a[pos]; 
     }
 }
-void mode(int a[], int b[], int size){                             
-    for(int i = 0; i < size; ++i){         //by storing in array
-        for(int j = 0; j < 10; ++j){
-            if(a[i] == j){
-                b[j]++;
-                int x = j+1;
-                while(a[x] == j){
-                    b[j]++;
-                    ++x;
-                }
-            }
-        }
+int *mode(int a[], int b[], int size){                             
+    for(int i = 0; i < size; ++i){
+        ++b[a[i]];
     }
-    int high = 0;
-    int y = 0;
-    int *c = new int [y];
+    int high = -1;
+    int mode_cnt = 0;
     for(int i = 0; i < 10; ++i){
         if(high < b[i]){
             high = b[i];
+            mode_cnt = 1;
+        }
+        else if (high == b[i])
+        {
+            ++mode_cnt;
         }
     }
+    
+    int *c = new int [mode_cnt + 2];
+    int y = 2;
+    c[0] = mode_cnt;
+    c[1] = high;
     for(int i = 0; i < 10; ++i){
         if(b[i] == high){
             c[y] = i;
             ++y;
         }
     }
-    for(int i = 0; i < y; ++i){
-        cout << c[i] << " ";
-    }
+    return c;
 }
