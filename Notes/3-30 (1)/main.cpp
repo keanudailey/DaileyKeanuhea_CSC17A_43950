@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
     prntStu(one,1);
     //Deallocate Memory
     delete []stu;
+    delete []one;
     return 0;
 }
 Student *fillStu(int n){
