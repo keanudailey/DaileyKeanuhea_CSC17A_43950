@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<configurationDescriptor version="94">
-=======
 <configurationDescriptor version="90">
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-<<<<<<< HEAD
-      <itemPath>mdata.h</itemPath>
-=======
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
+      <itemPath>student.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -46,11 +39,8 @@
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-<<<<<<< HEAD
-      <item path="mdata.h" ex="false" tool="3" flavor2="0">
+      <item path="student.h" ex="false" tool="3" flavor2="0">
       </item>
-=======
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -74,11 +64,8 @@
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
-<<<<<<< HEAD
-      <item path="mdata.h" ex="false" tool="3" flavor2="0">
+      <item path="student.h" ex="false" tool="3" flavor2="0">
       </item>
-=======
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
     </conf>
   </confs>
 </configurationDescriptor>

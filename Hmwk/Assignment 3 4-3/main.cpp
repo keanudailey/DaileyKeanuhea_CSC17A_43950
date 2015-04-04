@@ -1,5 +1,6 @@
 /* 
  * File:   main.cpp
+<<<<<<< HEAD
  * Author: Keanu
  *
  * Created on April 3, 2015, 2:36 PM
@@ -312,3 +313,22 @@ void fToa(string name, int *a, int size){
     }
     inFile.close();
 }
+=======
+ * Author: rcc
+ *
+ * Created on March 25, 2015, 1:21 PM
+ */
+
+#include <cstdlib>
+
+using namespace std;
+
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+
+    return 0;
+}
+
+>>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233

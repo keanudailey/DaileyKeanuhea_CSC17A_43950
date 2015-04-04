@@ -3,15 +3,11 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Assignment 3 4-3</name>
+            <name>Scratch</name>
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
-<<<<<<< HEAD
             <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
-=======
-            <header-extensions/>
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
             <make-dep-projects/>
             <sourceRootList/>
             <confList>
@@ -24,10 +20,6 @@
                     <type>1</type>
                 </confElem>
             </confList>
-<<<<<<< HEAD
-=======
-            <sourceEncoding>UTF-8</sourceEncoding>
->>>>>>> 8289a03a6702b5dc61251577a634bd1ba26ba233
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
             </formatting>
