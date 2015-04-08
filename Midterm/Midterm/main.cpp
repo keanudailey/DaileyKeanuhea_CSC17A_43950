@@ -8,6 +8,7 @@
 using namespace std;
 #include "bankstatement.h"
 #include "employee.h"
+#include "statsResult.h"
 
 //Global Constants Here!!!
 
@@ -17,6 +18,11 @@ int getN();
 void def(int);
 void problem1();
 void problem2();
+float mean(int [],int);
+float median(int [],int);
+int *mode(int [],int [],int);
+void printStat(statsResult *);
+statsResult *avgMedMode(int *,int);
 void problem3();
 void problem4();
 void problem5();
@@ -141,10 +147,87 @@ void problem2(){
         cin >> run;
     }while(tolower(run[0]) == 'y');
     cout << "Total Gross Pay: $" << gross << endl;
+    delete [] aray;
 }
-
+statsResult *avgMedMode(int *aray, int size){
+    statsResult *test=new statsResult;  
+    test->avg = mean(aray,size);
+    cerr << "\n\nwork\n\n";
+    test->median = median(aray,size);
+    int bray[10];
+    for(int i = 0; i < 10; ++i){
+        bray[i] = 0;
+    }
+    test->mode = mode(aray,bray,size);
+    
+    return test;
+}
+float mean(int *a,int size){
+    float total = 0;
+    for(int i = 0; i < size; ++i){
+        total += a[i];
+    }
+    float avg = total/size;
+    return avg;
+}
+float median(int *a,int size){
+    if(size%2 == 0){
+        int x = size/2;
+        int y = size/2 -1;
+        float c = (a[x] + a[y])/2;
+        return c;
+    }
+    else{
+        int pos = size/2;
+        return a[pos]; 
+    }
+}
+int *mode(int *a, int b[], int size){                             
+    for(int i = 0; i < size; ++i){
+        ++b[a[i]];
+    }
+    int high = -1;
+    int mode_cnt = 0;
+    for(int i = 0; i < 10; ++i){
+        if(high < b[i]){
+            high = b[i];
+            mode_cnt = 1;
+        }
+        else if (high == b[i])
+        {
+            ++mode_cnt;
+        }
+    }
+    
+    int *c = new int [mode_cnt + 2];
+    int y = 2;
+    c[0] = mode_cnt;
+    c[1] = high;
+    for(int i = 0; i < 10; ++i){
+        if(b[i] == high){
+            c[y] = i;
+            ++y;
+        }
+    }
+    return c;
+}
+void printStat(statsResult *test){
+    cout << "Average: " << test->avg << endl;
+}
 void problem3(){
-        cout<<"In problem # 3"<<endl<<endl;
+    cout<<"In problem # 3"<<endl<<endl;
+    cout << "Enter size of array.\n";
+    int size;
+    cin >> size;
+    int *aray = new int[size];
+    cout << "Enter values for array.\n";
+    for(int i = 0; i < size; ++i){
+        cin >> aray[i];
+    }
+    statsResult *ss=avgMedMode(aray,size);
+    printStat(ss);
+    delete [] aray; 
+    delete [] ss;
 }
 
 void problem4(){
