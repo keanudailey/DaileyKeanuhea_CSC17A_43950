@@ -153,14 +153,22 @@ void problem2(){
 statsResult *avgMedMode(int *aray, int size){
     statsResult *test=new statsResult;  
     test->avg = mean(aray,size);
+<<<<<<< HEAD
+=======
+    cerr << "\n\nwork\n\n";
+>>>>>>> f05077970e7e5fc06d60f006b925377e11be3bbe
     test->median = median(aray,size);
     int bray[10];
     for(int i = 0; i < 10; ++i){
         bray[i] = 0;
     }
     test->mode = mode(aray,bray,size);
+<<<<<<< HEAD
     test->nModes = test->mode[0];
     test->maxFreq = test->mode[1];
+=======
+    
+>>>>>>> f05077970e7e5fc06d60f006b925377e11be3bbe
     return test;
 }
 float mean(int *a,int size){
@@ -175,7 +183,11 @@ float median(int *a,int size){
     if(size%2 == 0){
         int x = size/2;
         int y = size/2 -1;
+<<<<<<< HEAD
         float c = (a[x] + a[y])/2.0;
+=======
+        float c = (a[x] + a[y])/2;
+>>>>>>> f05077970e7e5fc06d60f006b925377e11be3bbe
         return c;
     }
     else{
@@ -214,6 +226,7 @@ int *mode(int *a, int b[], int size){
 }
 void printStat(statsResult *test){
     cout << "Average: " << test->avg << endl;
+<<<<<<< HEAD
     cout << "Median: " << test->median << endl;
     cout << "Mode(s): ";
     for(int i = 0; i < test->mode[0]; ++i){
@@ -226,6 +239,11 @@ void printStat(statsResult *test){
 }
 void problem3(){
     cout <<"In problem # 3"<<endl<<endl;
+=======
+}
+void problem3(){
+    cout<<"In problem # 3"<<endl<<endl;
+>>>>>>> f05077970e7e5fc06d60f006b925377e11be3bbe
     cout << "Enter size of array.\n";
     int size;
     cin >> size;
@@ -234,8 +252,15 @@ void problem3(){
     for(int i = 0; i < size; ++i){
         cin >> aray[i];
     }
+<<<<<<< HEAD
     printStat(avgMedMode(aray,size));
     delete [] aray; 
+=======
+    statsResult *ss=avgMedMode(aray,size);
+    printStat(ss);
+    delete [] aray; 
+    delete [] ss;
+>>>>>>> f05077970e7e5fc06d60f006b925377e11be3bbe
 }
 
 void problem4(){
