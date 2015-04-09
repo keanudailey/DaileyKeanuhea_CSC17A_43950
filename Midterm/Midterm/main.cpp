@@ -8,6 +8,7 @@
 using namespace std;
 #include "bankstatement.h"
 #include "employee.h"
+#include "statsResult.h"
 
 //Global Constants Here!!!
 
@@ -17,10 +18,16 @@ int getN();
 void def(int);
 void problem1();
 void problem2();
+float mean(int [],int);
+float median(int [],int);
+int *mode(int [],int [],int);
+void printStat(statsResult *);
+statsResult *avgMedMode(int *,int);
 void problem3();
 void problem4();
 void problem5();
 void problem6();
+void problem7();
 
 //Begin Execution Here!!!
 int main(int argv,char *argc[]){
@@ -141,22 +148,146 @@ void problem2(){
         cin >> run;
     }while(tolower(run[0]) == 'y');
     cout << "Total Gross Pay: $" << gross << endl;
+    delete [] aray;
 }
-
+statsResult *avgMedMode(int *aray, int size){
+    statsResult *test=new statsResult;  
+    test->avg = mean(aray,size);
+    test->median = median(aray,size);
+    int bray[10];
+    for(int i = 0; i < 10; ++i){
+        bray[i] = 0;
+    }
+    test->mode = mode(aray,bray,size);
+    test->nModes = test->mode[0];
+    test->maxFreq = test->mode[1];
+    return test;
+}
+float mean(int *a,int size){
+    float total = 0;
+    for(int i = 0; i < size; ++i){
+        total += a[i];
+    }
+    float avg = total/size;
+    return avg;
+}
+float median(int *a,int size){
+    if(size%2 == 0){
+        int x = size/2;
+        int y = size/2 -1;
+        float c = (a[x] + a[y])/2.0;
+        return c;
+    }
+    else{
+        int pos = size/2;
+        return a[pos]; 
+    }
+}
+int *mode(int *a, int b[], int size){                             
+    for(int i = 0; i < size; ++i){
+        ++b[a[i]];
+    }
+    int high = -1;
+    int mode_cnt = 0;
+    for(int i = 0; i < 10; ++i){
+        if(high < b[i]){
+            high = b[i];
+            mode_cnt = 1;
+        }
+        else if (high == b[i])
+        {
+            ++mode_cnt;
+        }
+    }
+    
+    int *c = new int [mode_cnt + 2];
+    int y = 2;
+    c[0] = mode_cnt;
+    c[1] = high;
+    for(int i = 0; i < 10; ++i){
+        if(b[i] == high){
+            c[y] = i;
+            ++y;
+        }
+    }
+    return c;
+}
+void printStat(statsResult *test){
+    cout << "Average: " << test->avg << endl;
+    cout << "Median: " << test->median << endl;
+    cout << "Mode(s): ";
+    for(int i = 0; i < test->mode[0]; ++i){
+        cout << test->mode[i+2] << " ";
+    }
+    cout << endl;
+    cout << "Number of Modes: " << test->nModes << endl;
+    cout << "Max frequency: " << test->maxFreq << endl;
+     
+}
 void problem3(){
-        cout<<"In problem # 3"<<endl<<endl;
+    cout <<"In problem # 3"<<endl<<endl;
+    cout << "Enter size of array.\n";
+    int size;
+    cin >> size;
+    int *aray = new int[size];
+    cout << "Enter values for array.\n";
+    for(int i = 0; i < size; ++i){
+        cin >> aray[i];
+    }
+    printStat(avgMedMode(aray,size));
+    delete [] aray; 
 }
 
 void problem4(){
-        cout<<"In problem # 4"<<endl<<endl;
+    cout<<"In problem # 4"<<endl<<endl;
+    cout << "Enter a four digit integer with numbers from 0-7.\n";
+    char cData[5];
+    cin >> cData;
+    int data[4];
+    for(int i = 0; i < 4; ++i){
+        data[i] = (cData[i] - 48);
+        data[i] += 3;
+        data[i] %= 8;
+    }
+    swap(data[0],data[1]);
+    swap(data[2],data[3]);
+    for(int i = 0; i < 4; ++i){
+        cout << data[i] << " ";
+    }
+    cout << endl << "(Part 2)Enter a four digit integer with numbers from 0-7.\n";
+    char cDat[5];
+    cin >> cDat;
+    int dat[4];
+    for(int i = 0; i < 4; ++i){
+        dat[i] = (cDat[i] - 43);
+        dat[i] %= 8;
+    }
+    swap(dat[0],dat[1]);
+    swap(dat[2],dat[3]);
+    for(int i = 0; i < 4; ++i){
+        cout << dat[i] << " ";
+    }
+    cout << endl;
 }
 
 void problem5(){
-        cout<<"In problem # 5"<<endl<<endl;
+    cout <<"In problem # 5"<<endl<<endl;
+    cout << "int:16\n";
+    cout << "unsigned int:33\n";
+    cout << "short:7\n";
+    cout << "unsigned short:8\n";
+    cout << "long:16\n";
+    cout << "unsigned long:33\n";
+    cout << "float:16\n";
+    cout << "double:16\n";
 }
 
 void problem6(){
-        cout<<"In problem # 6"<<endl<<endl;
+    cout<<"In problem # 6"<<endl<<endl;
+}
+
+void problem7(){
+    cout<<"In problem # 6"<<endl<<endl;
 }
 
 void def(int inN){
