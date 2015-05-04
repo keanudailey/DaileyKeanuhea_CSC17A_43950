@@ -14,14 +14,23 @@ using namespace std;
 /*
  * 
  */
+unsigned char fact(int size){
+    char num = size;
+    for(int i = size; i > 1; --i){
+        num *= (i-1);
+    }
+    return num;
+}
 int main(int argc, char** argv) {
-    int size = 1;
-    int *array = new int [size];
-    cout << "Enter a sentence\n";
-    string sentence;
-    getline(cin,sentence);
-    cout << sentence;
+    int num;
+    do{
+    cout << "Enter a number\n";
+    cin >> num;
+    cout << fact(num) << endl;        
+    }while(num != -1);
+
     
     return 0;
+    
 }
 
