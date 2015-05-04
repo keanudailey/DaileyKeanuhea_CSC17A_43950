@@ -8,6 +8,7 @@
 #ifndef STATS_H
 #define	STATS_H
 struct Stats{
+    char *board;
     int p1Moves;
     int p2Moves;
     int p1Jumps;

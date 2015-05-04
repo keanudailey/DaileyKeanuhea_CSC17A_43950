@@ -20,37 +20,38 @@ enum Checker {blackKing = 'B', black = 'b', redKing = 'R', red = 'r', empty = '-
 enum Players {playerOne = true, playerTwo = false};
 vector<int> move(bool);
 void outputBoard();
-bool validateMove(vector<int>&,bool,Stats);
+bool validateMove(vector<int>&,bool);
 void fillBoard();
 bool isPlayer(bool, int);
 bool isKing(int);
-char board[64];
+Stats game;
 int main(int argc, char** argv) {
     //Fill structure with null values
-    Stats game;
+    game.board = new char[64];
     game.p1Jumps = 0;
     game.p1Kings = 0;
     game.p1Moves = 0;
     game.p2Jumps = 0;
     game.p2Kings = 0;
     game.p2Moves = 0;
-    //Fill board with initial values
+    //Fill game.board with initial values
     fillBoard();
     //Output Board
     outputBoard();
     bool curPlayer = playerOne;
     while(1){
-        vector<int> mList;
-        mList = move(curPlayer);
-        if(validateMove(mList,curPlayer,game) == false){
+        vector<int> moveList;
+        moveList = move(curPlayer);
+        if(validateMove(moveList,curPlayer) == false){
             cerr << "Invalid move\n";
-            continue;
+            //continue;
         }
         else{
             outputBoard();
             curPlayer = !curPlayer; 
         }
     }
+    delete[]game.board;
     return 0; 
 }
 vector<int> move(bool curPlayer){
@@ -60,16 +61,16 @@ vector<int> move(bool curPlayer){
     string pos;
     getline(cin,pos);
     int idx = 0;
-    int val = 0;
+    int value = 0;
     vector<int> num;
     while(idx < pos.size()){
         if(idx%2 == 0){
-            val = (toupper(pos[idx])-'A')*8;
+            value = (toupper(pos[idx])-'A')*8;
             
         }
         else{
-            val += pos[idx] - '1';
-            num.push_back(val);
+            value += pos[idx] - '1';
+            num.push_back(value);
         }
         ++idx;
     }
@@ -77,33 +78,32 @@ vector<int> move(bool curPlayer){
     
     
 }
-bool validateMove(vector<int>& move, bool curPlayer, Stats game){
+bool validateMove(vector<int>& move, bool curPlayer){
     int boardCopy[64];
-    memcpy(boardCopy,board,sizeof(boardCopy));
     int curPos = move[0];
     isPlayer(curPlayer,curPos);
     int nextPos;
     int diff = 0;
-    int diffy = 0;
+    int nextDiff = 0;
     bool validMove = false;
     for(int i = 1; i < move.size(); ++i){
         curPos = move[i-1];
         nextPos = move[i];
         diff = nextPos - curPos;
-        diffy = (move[i+1] - nextPos);
+        nextDiff = (move[i+1] - nextPos);
         if(curPlayer == playerOne){
             if(curPos <= 63 && curPos >= 56){
-                board[curPos] = redKing;
+                game.board[curPos] = redKing;
                 ++game.p1Kings;
             }
         }
         else{
             if(curPos <= 7 && curPos >= 0){
-                board[curPos] = blackKing;
+                game.board[curPos] = blackKing;
                 ++game.p2Kings;
             }
         }
-        if(board[nextPos] != empty){
+        if(game.board[nextPos] != empty){
             cout << "Not an empty position\n";
         }
         else if(isPlayer(curPlayer,curPos)){
@@ -113,20 +113,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             if(isKing(curPos)){
                 if(curPlayer == playerOne){
                     if(diff == -7 || diff == +9){
-                        board[curPos+diff] == redKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == redKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p1Moves;
                     }
                     else if(diff == -14 || diff == +18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = redKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = redKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p1Jumps;
                             }
@@ -135,20 +135,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
                 }
                 else{
                     if(diff == -7 || diff == +9){
-                        board[curPos+diff] == blackKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == blackKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p2Moves;
                     }
                     else if(diff == -14 || diff == +18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = blackKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = blackKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p2Jumps;
                             }
@@ -158,20 +158,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else if(curPlayer == playerOne){
                 if(diff == +9){
-                    board[curPos+diff] = red;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = red;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p1Moves;
                 }
                 else if(diff == +18){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = red;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = red;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p1Jumps;
                         }
@@ -180,20 +180,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else{
                 if(diff == -7){
-                    board[curPos+diff] = black;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = black;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p2Moves;
                 }
                 else if(diff == -14){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = black;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = black;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p2Jumps;
                         }
@@ -205,20 +205,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             if(isKing(curPos)){
                 if(curPlayer == playerOne){
                     if(diff == +7 || diff == -9){
-                        board[curPos+diff] == redKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == redKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p1Moves;
                     }
                     else if(diff == +14 || diff == -18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = redKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = redKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p1Jumps;
                             }
@@ -227,20 +227,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
                 }
                 else{
                     if(diff == +7 || diff == -9){
-                        board[curPos+diff] == blackKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == blackKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p2Moves;
                     }
                     else if(diff == +14 || diff == -18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = blackKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = blackKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p2Jumps;
                             }
@@ -250,20 +250,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else if(curPlayer == playerOne){
                 if(diff == +7){
-                    board[curPos+diff] = red;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = red;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p1Moves;
                 }
                 else if(diff == +14){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = red;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = red;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p1Jumps;
                         }
@@ -272,20 +272,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else{
                 if(diff == -9){
-                    board[curPos+diff] = black;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = black;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p2Moves;
                 }
                 else if(diff == -18){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = black;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = black;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p2Jumps;
                         }
@@ -297,20 +297,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             if(isKing(curPos)){
                 if(curPlayer == playerOne){
                     if(diff == +7 || diff == -7 || diff == +9 || diff == -9){
-                        board[curPos+diff] == redKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == redKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p1Moves;
                     }
                     else if(diff == +14 || diff == -14 || diff == +18 || diff == -18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = redKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = redKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p1Jumps;
                             }
@@ -319,20 +319,20 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
                 }
                 else{
                     if(diff == +7 || diff == -7 || diff == +9 || diff == -9){
-                        board[curPos+diff] == blackKing;
-                        board[curPos] = empty;
+                        game.board[curPos+diff] == blackKing;
+                        game.board[curPos] = empty;
                         validMove = true;
                         ++game.p2Moves;
                     }
                     else if(diff == +14 || diff == -14 || diff == +18 || diff == -18){
-                        if(board[curPos+(diff/2) != empty]){
-                            if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                        if(game.board[curPos+(diff/2) != empty]){
+                            if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                                 cout << "Cannot remove own piece\n";
                             }
                             else{
-                                board[curPos+diff] = blackKing;
-                                board[curPos+(diff/2)] = empty;
-                                board[curPos] = empty;
+                                game.board[curPos+diff] = blackKing;
+                                game.board[curPos+(diff/2)] = empty;
+                                game.board[curPos] = empty;
                                 validMove = true;
                                 ++game.p2Jumps;
                             }
@@ -342,40 +342,40 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else if(curPlayer == playerOne){
                 if(diff == +7){
-                    board[curPos+diff] = red;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = red;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p1Moves;
                 }
                 else if(diff == +14){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = red;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = red;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p1Jumps;
                         }
                     }
                 }
                 else if(diff == +9){
-                    board[curPos+diff] = red;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = red;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p1Moves;
                 }
                 else if(diff == +18){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == red || board[curPos+(diff/2)] == redKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == red || game.board[curPos+(diff/2)] == redKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = red;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = red;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p1Jumps;
                         }
@@ -384,40 +384,40 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
             }
             else{
                 if(diff == -7){
-                    board[curPos+diff] = black;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = black;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p2Moves;
                 }
                 else if(diff == -14){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = black;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = black;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p2Jumps;
                         }
                     }
                 }
                 else if(diff == -9){
-                    board[curPos+diff] = black;
-                    board[curPos] = empty;
+                    game.board[curPos+diff] = black;
+                    game.board[curPos] = empty;
                     validMove = true;
                     ++game.p2Moves;
                 }
                 else if(diff == -18){
-                    if(board[curPos+(diff/2)] != empty){
-                        if(board[curPos+(diff/2)] == black || board[curPos+(diff/2)] == blackKing){
+                    if(game.board[curPos+(diff/2)] != empty){
+                        if(game.board[curPos+(diff/2)] == black || game.board[curPos+(diff/2)] == blackKing){
                             cout << "Cannot remove own piece\n";
                         }
                         else{
-                            board[curPos+diff] = black;
-                            board[curPos+(diff/2)] = empty;
-                            board[curPos] = empty;
+                            game.board[curPos+diff] = black;
+                            game.board[curPos+(diff/2)] = empty;
+                            game.board[curPos] = empty;
                             validMove = true;
                             ++game.p2Jumps;
                         }
@@ -427,50 +427,48 @@ bool validateMove(vector<int>& move, bool curPlayer, Stats game){
         }
                 if(curPlayer == playerOne){
             if(nextPos <= 63 && nextPos >= 56){
-                board[nextPos] = redKing;
+                game.board[nextPos] = redKing;
                 ++game.p1Kings;
             }
         }
         else{
             if(nextPos <= 7 && nextPos >= 0){
-                board[nextPos] = blackKing;
+                game.board[nextPos] = blackKing;
                 ++game.p2Kings;
             }
         }
         if(diff == +14 || diff == -14 || diff == +18 || diff == -18){
-            if(diffy == +7 || diffy == -7 || diffy == +9 || diffy == -9){
-                cout << "diffy: " << diffy << endl;
+            if(nextDiff == +7 || nextDiff == -7 || nextDiff == +9 || nextDiff == -9){
                 break;
             }
         }
         if(diff == +7 || diff == -7 || diff == +9 || diff == -9){
-            cout << "diff: " << diff << endl;
             break;
         }
     }
     if(!validMove){
-        memcpy(board,boardCopy,sizeof(board));
+        memcpy(game.board,boardCopy,sizeof(game.board));
     }
     return validMove;
 }
 bool isKing(int pos){
-    return(board[pos] == blackKing || board[pos] == redKing);
+    return(game.board[pos] == blackKing || game.board[pos] == redKing);
 }
 void outputBoard(){
     int row = 0;
     cout << "      Player 1\n";
     cout << "  1 2 3 4 5 6 7 8\n";
-    char x = 'A' , y = 'A';
+    char xAxis= 'A' , yAxis = 'A';
     for(int i = 0; i < 8; ++i){ 
         for(int j = 0; j < 8; ++j){
             if(j == 0){
-                cout << x << " ";
-                ++x;
+                cout << xAxis<< " ";
+                ++xAxis;
         }
-            cout << board[i*8 +j] << " ";
+            cout << game.board[i*8 +j] << " ";
             if(j == 7){
-                cout << y << " ";
-                ++y;
+                cout << yAxis << " ";
+                ++yAxis;
             }
         }
         cout << endl;
@@ -488,30 +486,30 @@ bool isPlayer(bool curPlayer, int pos){
 }
 void fillBoard(){
     for(int i = 0; i < 64; ++i){
-        board[i] = empty;
+        game.board[i] = empty;
     }
-    board[0] = red;
-    board[2] = red;
-    board[4] = red;
-    board[6] = red;
-    board[9] = red;
-    board[11] = red;
-    board[13] = red;
-    board[15] = red;
-    board[16] = red;
-    board[18] = red;
-    board[20] = red;
-    board[22] = red;
-    board[41] = black;
-    board[43] = black;
-    board[45] = black;
-    board[47] = black;
-    board[48] = black;
-    board[50] = black;
-    board[52] = black;
-    board[54] = black;
-    board[57] = black;
-    board[59] = black;
-    board[61] = black;
-    board[63] = black;
+    game.board[0] = red;
+    game.board[2] = red;
+    game.board[4] = red;
+    game.board[6] = red;
+    game.board[9] = red;
+    game.board[11] = red;
+    game.board[13] = red;
+    game.board[15] = red;
+    game.board[16] = red;
+    game.board[18] = red;
+    game.board[20] = red;
+    game.board[22] = red;
+    game.board[41] = black;
+    game.board[43] = black;
+    game.board[45] = black;
+    game.board[47] = black;
+    game.board[48] = black;
+    game.board[50] = black;
+    game.board[52] = black;
+    game.board[54] = black;
+    game.board[57] = black;
+    game.board[59] = black;
+    game.board[61] = black;
+    game.board[63] = black;
 }
